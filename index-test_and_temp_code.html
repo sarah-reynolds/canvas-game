@@ -1,9 +1,317 @@
-run a functaion is the userScore > highScore
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quidditch Practice</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css" media="screen">
+		.margin-left{
+			margin-left: 20px;
+		}
+		.margin-bottom{
+			margin-bottom:  20px;
+		}
+		.center{
+			text-align: center;
+		}
+		.inline{
+			display: inline-block;
+			margin:  0 30px 30px 30px;
+			width: 120px;
+		}
+	</style>
+</head>
+<body class="center">
+	<div class="container">
+		
+		<div>
+			<h2>Quidditch Practice</h2>
+		</div>
+		
+		<div class="row lead">
+			<p>Use the arrow keys to catch the snitch!<br/> Enter your name then click 'Start game'</p>
+		</div>
+		<div class="row margin-bottom">
+		<input id="player-name" type="text" placeholder="Player name">
+		<button onclick="newPlayer()">Enter name</button>
+		</div>
+		
+		<div class="row">
+			<div class="inline"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
+			<div class="inline" id="hiScore">High score: 0</div>
+			<div class="inline" id="timer">Timer: 30 seconds</div>
+		</div>
+<!-- 		<div class="row">
+			<div class="inline"></div>
+			<div class="inline" id="hiScoreName">High score holder: </div>
+			<div class="inline" id="timer"></div>
+		</div> -->
+		
+		<div class="row margin-bottom">
+			<button onclick="startGame()">Start game</button>
+		</div>
+		
+			<script type="text/javascript">
+
+			// var playerArray = [];
+
+			function Player(name){
+				this.name = name;
+				this.highscore = 0;
+			}
+
+			// Player.prototype.highscre = 0
+
+			function newPlayer(){
+				var playerNameDiv = document.getElementById('player-name');
+				var playerName = playerNameDiv.value;
+				playerArray.push(new Player(playerName));
+				console.log(playerArray)
+
+				// document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
+				// playerArray.push(playerName);
+				// console.log(playerArray)
+			}
+
+			function startGame(){
+				gameOn = true;
+				// user started the game. save the time and time plus 30 seconds
+				gameStart = Date.now();
+				gameEnd = Date.now() + 30000;
+				// stert timerInterval
+				timerInterval = Math.floor(setInterval(updateTimer, 1000));
+				userScore = 0;
+				// here add document to update your score to reflect 0
+				document.getElementById('score').innerHTML = userScore
+			}
+
+			function updateTimer() {
+				var newNow = Date.now();
+				var timeDifference = (gameEnd - newNow) / 1000;
+				if(timeDifference < 0){
+					clearInterval(timerInterval);
+					gameOn = false;
+					timeDifference = 0;
+					document.getElementById('timer').innerHTML = "Game over";
+					// var c = document.getElementById("myCanvas");
+					// var ctx = c.getContext("2d");
+					// ctx.font = "30px Arial";
+					// ctx.fillText("Game Over",10,50);
+				}else{
+				document.getElementById('timer').innerHTML = "Timer: " + Math.floor(timeDifference) + " seconds";
+				}
+			}
 
 
 
-if(userScore > highScore){
+
+
+			var gameStart = 0;
+			var gameEnd = 0;
+			var timerInterval;
+			var playerArray = [];
+			// add start button - when clicked on the game starts and player can move
+			// when clicked on, get Date.new() and save it to current Date
+			// when clicked on get date.now() + 30 * 3000 milliseconds
+			// create a setinterval to run every X and inside, recalculate the timer
+			// When the difference is < 0, stop the game, clear the timer, check high score
+			// 1. add pause button
+			// 2. add a countdown timer
+			// 2a. once timer runs out, game is over
+			// 3. keep score, by player
+			// 3a make a player constructor - name (ask), high score
+			// 3b make an unput for player name
+			// 3c
+				// create the canvas tag with js. the canvas just holds the game
+				var canvas = document.createElement('canvas');
+				// create a context gor JS to play with (methods, properties, etc)
+				var context = canvas.getContext('2d')
+
+				canvas.width = 512; //size of the background
+				canvas.height = 480;
+				// add the canvas tag to the dom
+				document.body.appendChild(canvas);
+
+				var backgroundImage = new Image();//anytime you see something with 'new' (it's a constructr) then it's special and either you or js made it
+				backgroundImage.src = "background.png";
+
+				var speedModifier = .7;
+				var monsterSpeed = 2.33;
+
+				// GAME ON OFF
+				var gameOn = false;
+
+				// make a variable var for our hero. he is an image
+				var hero = new Image();
+				hero.src = "hp2.png";
+				var heroLocation = {
+					x: 50,
+					y: 50
+				}
+
+				// make a var for our bad guy
+				var monster = new Image();
+				monster.src = "snitch3.png";
+				var monsterLocation = {
+					x: 350,
+					y: 350,
+					newX: 350,
+					newY: 350
+				}
+				var userScore = 0;
+				var highScore = 0;
+				var highScoreName = 0;
+				
+
+				
+				// an array to hold all the keys that are currently pressed down
+				var keysDown = [];
+
+				addEventListener('keyup', function(event){
+					delete keysDown[event.keyCode];
+				});
+
+				// We need a way to tell if the user has pushed the arrow key
+				//anonymous function has no name, and is only called if its parents calls it (which here is the keydown event) -- and with it comes an event parameter
+				addEventListener('keydown', function(event){
+					// if keyDown[39] is true then the user pushed right
+					// if keyDown[40] is true then the user pushed down
+					// if keyDown[37] is true then the user pushed left
+					// if keyDown[38] is true then the user pushed up
+
+					keysDown[event.keyCode] = true;
+					// console.log(keysDown);
+					// we know a key was pressed or we wouldnt be in here
+					// what key did they press?
+					// console.log(event.key);
+					// if(event.key === 'ArrowDown'){
+					// 	console.log('user pressed down arrow')
+					// 	heroLocation.y += 10
+					// }
+					// if(event.key === 'ArrowUp'){
+					// 	console.log('user pressed up arrow')
+					// 	heroLocation.y -= 10
+					// }
+					// if(event.key === 'ArrowLeft'){
+					// 	console.log('user pressed left arrow')
+					// 	heroLocation.x -= 10
+					// }
+					// if(event.key === 'ArrowRight'){
+					// 	console.log('user pressed right arrow')
+					// 	heroLocation.x += 10
+					// }
+				})
+
+			// this is where we will update the hero based on whats true in keys down
+				function update(){
+					// user pressed right at some point because it's in the array
+					// add if so that it only runs if the location has not reached the end
+					//stay inside right
+					if(39 in keysDown){
+						if(heroLocation.x <= 425){
+							heroLocation.x += (10 * speedModifier);
+						}
+					}
+					// stay inside left
+					if(37 in keysDown){
+						if(heroLocation.x >= 0){
+							heroLocation.x -= (10 * speedModifier);
+						}
+					}
+					// stay inside the top
+					if(38 in keysDown){
+						if(heroLocation.y >= 5){
+							heroLocation.y -= (10 * speedModifier);
+						}
+					}
+					//stay inside the bottom
+					if(40 in keysDown){
+						if(heroLocation.y <= 400){
+							heroLocation.y += (10 * speedModifier);
+						}
+					}
+
+					// move monster if you touch him
+					if(
+						(heroLocation.x <= monsterLocation.x + 32)
+						&& (heroLocation.y <= monsterLocation.y + 32)
+						&& (monsterLocation.x <= heroLocation.x + 32)
+						&& (monsterLocation.y <= heroLocation.y + 32)
+						){
+							userScore++;
+						document.getElementById('score').innerHTML = userScore
+						if(userScore > highScore){
 							highScore = userScore;
-							highScoreName = playerName
+							document.getElementById('hiScore').innerHTML = "High score: " + highScore
+						}
+						var currentPlayerIndex = playerArray.length-1;
+						if(userScore > playerArray[currentPlayerIndex].highscore){
+							playerArray[currentPlayerIndex].highscore = userScore
+						}
 
-							document.getElementById('hiScoreName').innerHTML = "High score ho: " + highScore
+
+						// randomize the location of the monster upon contact
+							var random = Math.random() * 450;
+							var random2 = Math.random() * 400;
+							monsterLocation.x = random;
+							monsterLocation.y = random2;
+						}
+				}
+				
+				// have monster move randomly on the page
+				function monsterMove(){
+					if(gameOn){
+
+					if(
+						(monsterLocation.x <= monsterLocation.newX + 32)
+						&& (monsterLocation.y <= monsterLocation.newY + 32)
+						&& (monsterLocation.newX <= monsterLocation.x + 32)
+						&& (monsterLocation.newY <= monsterLocation.y + 32)
+						){
+						monsterLocation.newX = Math.ceil(Math.random() * 400)
+						monsterLocation.newY = Math.ceil(Math.random() * 400)
+					}else{
+						if(monsterLocation.newX > monsterLocation.x){
+							monsterLocation.x += (1 * monsterSpeed)
+						}
+						if(monsterLocation.newX < monsterLocation.x){
+							monsterLocation.x -= (1 * monsterSpeed)
+						}
+						if(monsterLocation.newY > monsterLocation.y){
+							monsterLocation.y += (1 * monsterSpeed)
+						}
+						if(monsterLocation.newY < monsterLocation.y){
+							monsterLocation.y -= (1 * monsterSpeed)
+						}
+					}
+				}
+				}
+
+			// KEEP THIS AT THE BOTTOM
+				function draw(){
+					if(gameOn){
+						update();
+					}
+					monsterMove();
+					// put out bgimage on the context at x=o and y = 0
+					context.drawImage(backgroundImage,0,0);
+					context.drawImage(hero, heroLocation.x, heroLocation.y);
+					context.drawImage(monster, monsterLocation.x, monsterLocation.y);
+					requestAnimationFrame(draw);
+				}
+
+			// timer steps
+			// 1. Need 2 times: now, and now + 30 seconds
+			// 2. 
+			// var now = Math.floor((Date.now()) / 1000);
+			// console.log(now);
+			// var timerStart = now + 00:00:30;
+			// console.log(timerStart);
+
+			draw();
+
+			</script>
+	</div>
+
+</body>
+</html>
