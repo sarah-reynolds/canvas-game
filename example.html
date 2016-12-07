@@ -1,0 +1,147 @@
+
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  //keeps track on Bowser's position
+  var opponent1Image = new Image();
+  opponent1Image.src = 'images/bowser.png';
+  var opponent1 = {
+    x: 400,
+    y: 200,
+    dirX: 1,
+    dirY: 0,
+    speed: 2
+  };
+  //keeps track on Koopa Troopa's position
+  var opponent2Image = new Image();
+  opponent2Image.src = 'images/koopa.png';
+  var opponent2 = {
+    x: 350,
+    y: 300,
+    dirX: 0,
+    dirY: -1,
+    speed: 2
+  };
+  var princessImage = new Image();
+  princessImage.src = 'images/princess.png';
+  var princess = {
+    x: 50,
+    y: 50,
+    dirX: 1,
+    dirY: 0,
+    speed: 2
+  };
+  //tracks turns
+  var turn = 0;
+  //track score
+  var score = 0;
+  var highScore = 0;
+  var marioImage = new Image();
+  marioImage.src = 'images/mario.png';
+  //Mario's starting position
+  var mario = {
+    x: 245,
+    y: 230,
+    dirX: 0,
+    dirY: 0,
+    speed: 5
+  };
+  window.addEventListener('keydown', function(event) {
+    var key = event.keyCode;
+    if (key === 37) { //left
+      mario.dirX = -1;
+    } else if (key === 39) { //right
+      mario.dirX = 1;
+    } else if (key === 38) { //up
+      mario.dirY = -1;
+    } else if (key === 40) { //down
+      mario.dirY = 1;
+    }
+    handleWrapping(mario);
+  });
+    window.addEventListener('keyup', function(event) {
+      var key = event.keyCode;
+      if (key === 37) { //left
+        mario.dirX = 0;
+      } else if (key === 39) { //right
+        mario.dirX = 0;
+      } else if (key === 38) { //up
+        mario.dirY = 0;
+      } else if (key === 40) { //down
+        mario.dirY = 0;
+      }
+  });
+  function collison(opponent) {
+    //detect collision
+    if (mario.x + 32 < opponent.x) {
+      return false;
+    } else if (opponent.x + 32 < mario.x) {
+      return false;
+    } else if (mario.y + 32 < opponent.y) {
+      return false;
+    } else if (opponent.y + 32 < mario.y) {
+      return false;
+    }
+    return true;
+  }
+  function handleWrapping(object) {
+    if (object.x > 510) {
+      object.x = 0;
+    } else if (object.x < 0) {
+      object.x = 510;
+    } else if (object.y > 480) {
+      object.y = 0;
+    } else if (object.y < 0) {
+      object.y = 480;
+    }
+  }
+  function updateOpponent(opponent) {
+    if (turn % 50 === 0) {
+      //change opponent's direction randomly
+      opponent.dirX = Math.floor(Math.random() * 3) - 1;
+      opponent.dirY = Math.floor(Math.random() * 3) - 1;
+    }
+    opponent.x += opponent.dirX * opponent.speed;
+    opponent.y += opponent.dirY * opponent.speed;
+    handleWrapping(opponent);
+  }
+  function main() {
+    //displays and refreshes background image
+    ctx.beginPath();
+    var background = new Image();
+    background.src = 'images/background.png';
+    ctx.drawImage(background, 0, 0);
+    ctx.drawImage(marioImage, mario.x, mario.y);
+    ctx.drawImage(princessImage, princess.x, princess.y);
+    ctx.drawImage(opponent1Image, opponent1.x, opponent1.y);
+    ctx.drawImage(opponent2Image, opponent2.x, opponent2.y);
+    ctx.font = "16px fantasy";
+    ctx.fillStyle  = "white";
+    ctx.fillText("Score: " + score, 15, 35);
+    ctx.fillText("High Score: " + highScore, 400, 35);
+    mario.x += mario.dirX * mario.speed;
+    mario.y += mario.dirY * mario.speed;
+    turn++;
+    updateOpponent(princess);
+    updateOpponent(opponent1);
+    updateOpponent(opponent2);
+    // updates score if Mario saves Princess
+    if (collison(princess)) {
+      score++;
+      //randomly move Princess
+      princess.x = Math.random() * 512;
+      princess.y = Math.random() * 480;
+      if (score > highScore) {
+        highScore = score;
+      }
+    }
+    // if hit by Bowser or the Koopa Troopa... you lose
+    if (collison(opponent1 || opponent2)) {
+      score = 0;
+      //randomly move Mario away from the opponents
+      mario.x = Math.floor(Math.random() * 400);
+      mario.y = Math.floor(Math.random() * 400);
+    }
+    requestAnimationFrame(main);
+  }
+  main();
+  
