@@ -68,7 +68,7 @@
 				playerArray.push(new Player(playerName));
 				console.log(playerArray)
 
-				// document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
+				document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
 				// playerArray.push(playerName);
 				// console.log(playerArray)
 			}
@@ -77,7 +77,7 @@
 				gameOn = true;
 				// user started the game. save the time and time plus 30 seconds
 				gameStart = Date.now();
-				gameEnd = Date.now() + 30000;
+				gameEnd = Date.now() + 10000;
 				// stert timerInterval
 				timerInterval = Math.floor(setInterval(updateTimer, 1000));
 				userScore = 0;
@@ -93,7 +93,7 @@
 					gameOn = false;
 					timeDifference = 0;
 					document.getElementById('timer').innerHTML = "Game over";
-					// var c = document.getElementById("myCanvas");
+					// var c = document.getElementById("canvas");
 					// var ctx = c.getContext("2d");
 					// ctx.font = "30px Arial";
 					// ctx.fillText("Game Over",10,50);
@@ -137,6 +137,7 @@
 
 				var speedModifier = .7;
 				var monsterSpeed = 2.33;
+				var bludgerSpeed = 2.33;
 
 				// GAME ON OFF
 				var gameOn = false;
@@ -158,6 +159,17 @@
 					newX: 350,
 					newY: 350
 				}
+
+				// make a var for bludger
+				var bludger = new Image();
+				bludger.src = "bludger1.png";
+				var bludgerLocation = {
+					x: 250,
+					y: 250,
+					newX: 250,
+					newY: 250
+				}
+
 				var userScore = 0;
 				var highScore = 0;
 				var highScoreName = 0;
@@ -256,35 +268,89 @@
 							monsterLocation.x = random;
 							monsterLocation.y = random2;
 						}
+
+
+					// move bludger if you touch him
+					if(
+						(heroLocation.x <= bludgerLocation.x + 45)
+						&& (heroLocation.y <= bludgerLocation.y + 45)
+						&& (bludgerLocation.x <= heroLocation.x + 45)
+						&& (bludgerLocation.y <= heroLocation.y + 45)
+						){
+							// userScore++;
+							// if you hit the bludger, slow down speed for 3 seconds, then return to normal speed
+							var random3 = Math.random() * 450;
+							var random4 = Math.random() * 400;
+							bludgerLocation.x = random3;
+							bludgerLocation.y = random4;
+							speedModifier = .1;
+							setTimeout(function(){ speedModifier = .7; }, 3000);
+						}
+
 				}
+
+
+						// randomize the location of the bludger upon contact
+							
+						
+				
 				
 				// have monster move randomly on the page
 				function monsterMove(){
 					if(gameOn){
 
-					if(
-						(monsterLocation.x <= monsterLocation.newX + 32)
-						&& (monsterLocation.y <= monsterLocation.newY + 32)
-						&& (monsterLocation.newX <= monsterLocation.x + 32)
-						&& (monsterLocation.newY <= monsterLocation.y + 32)
-						){
-						monsterLocation.newX = Math.ceil(Math.random() * 400)
-						monsterLocation.newY = Math.ceil(Math.random() * 400)
-					}else{
-						if(monsterLocation.newX > monsterLocation.x){
-							monsterLocation.x += (1 * monsterSpeed)
-						}
-						if(monsterLocation.newX < monsterLocation.x){
-							monsterLocation.x -= (1 * monsterSpeed)
-						}
-						if(monsterLocation.newY > monsterLocation.y){
-							monsterLocation.y += (1 * monsterSpeed)
-						}
-						if(monsterLocation.newY < monsterLocation.y){
-							monsterLocation.y -= (1 * monsterSpeed)
+						if(
+							(monsterLocation.x <= monsterLocation.newX + 32)
+							&& (monsterLocation.y <= monsterLocation.newY + 32)
+							&& (monsterLocation.newX <= monsterLocation.x + 32)
+							&& (monsterLocation.newY <= monsterLocation.y + 32)
+							){
+							monsterLocation.newX = Math.ceil(Math.random() * 400)
+							monsterLocation.newY = Math.ceil(Math.random() * 400)
+						}else{
+							if(monsterLocation.newX > monsterLocation.x){
+								monsterLocation.x += (1 * monsterSpeed)
+							}
+							if(monsterLocation.newX < monsterLocation.x){
+								monsterLocation.x -= (1 * monsterSpeed)
+							}
+							if(monsterLocation.newY > monsterLocation.y){
+								monsterLocation.y += (1 * monsterSpeed)
+							}
+							if(monsterLocation.newY < monsterLocation.y){
+								monsterLocation.y -= (1 * monsterSpeed)
+							}
 						}
 					}
 				}
+
+				// have bludger move randomly on the page
+				function bludgerMove(){
+					if(gameOn){
+
+						if(
+							(bludgerLocation.x <= bludgerLocation.newX + 32)
+							&& (bludgerLocation.y <= bludgerLocation.newY + 32)
+							&& (bludgerLocation.newX <= bludgerLocation.x + 32)
+							&& (bludgerLocation.newY <= bludgerLocation.y + 32)
+							){
+							bludgerLocation.newX = Math.ceil(Math.random() * 400)
+							bludgerLocation.newY = Math.ceil(Math.random() * 400)
+						}else{
+							if(bludgerLocation.newX > bludgerLocation.x){
+								bludgerLocation.x += (1 * bludgerSpeed)
+							}
+							if(bludgerLocation.newX < bludgerLocation.x){
+								bludgerLocation.x -= (1 * bludgerSpeed)
+							}
+							if(bludgerLocation.newY > bludgerLocation.y){
+								bludgerLocation.y += (1 * bludgerSpeed)
+							}
+							if(bludgerLocation.newY < bludgerLocation.y){
+								bludgerLocation.y -= (1 * bludgerSpeed)
+							}
+						}
+					}
 				}
 
 			// KEEP THIS AT THE BOTTOM
@@ -293,10 +359,12 @@
 						update();
 					}
 					monsterMove();
+					bludgerMove();
 					// put out bgimage on the context at x=o and y = 0
 					context.drawImage(backgroundImage,0,0);
 					context.drawImage(hero, heroLocation.x, heroLocation.y);
 					context.drawImage(monster, monsterLocation.x, monsterLocation.y);
+					context.drawImage(bludger, bludgerLocation.x, bludgerLocation.y);
 					requestAnimationFrame(draw);
 				}
 
