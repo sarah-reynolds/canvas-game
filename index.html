@@ -9,7 +9,7 @@
 			margin-left: 20px;
 		}
 		.margin-bottom{
-			margin-bottom:  20px;
+			margin-bottom:  10px;
 		}
 		.center{
 			text-align: center;
@@ -19,41 +19,53 @@
 			margin:  0 30px 30px 30px;
 			width: 120px;
 		}
+		.max-width{
+			width: 512px;
+		}
+		.text-left{
+			line-height: 35px;
+			font-size: 0.9em;
+		}
 	</style>
 </head>
 <body class="center">
-	<div class="container">
+	<div class="container max-width">
 		
 		<div>
 			<h2>Quidditch Practice</h2>
 		</div>
 		
 		<div class="row lead">
-			<p>Use the arrow keys to catch the snitch!<br/> Enter your name then click 'Start game'</p>
+			<p class="text-left">1. Enter your name.<br/>
+			2. Click 'Start game'.<br/>
+			3. Catch the snitch.<img src="snitch3.png"><br/>
+			4. Avoid the bludger. <img src="bludger3.png"> If you are hit by the bludger, your speed will slow down for 3 seconds.</p>
 		</div>
-		<div class="row margin-bottom">
-		<input id="player-name" type="text" placeholder="Player name">
-		<button onclick="newPlayer()">Enter name</button>
+			<div class="row margin-bottom">
+			<input class="pull-left" id="player-name" type="text" placeholder="Player name">
+			<button class="pull-left" onclick="newPlayer()">Enter name</button>
+			<button class="pull-right" onclick="startGame()">Start game</button>
 		</div>
-		
-		<div class="row">
-			<div class="inline"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
-			<div class="inline" id="hiScore">High score: 0</div>
-			<div class="inline" id="timer">Timer: 30 seconds</div>
-		</div>
-<!-- 		<div class="row">
-			<div class="inline"></div>
-			<div class="inline" id="hiScoreName">High score holder: </div>
-			<div class="inline" id="timer"></div>
-		</div> -->
 		
 		<div class="row margin-bottom">
-			<button onclick="startGame()">Start game</button>
+			<div class="pull-left"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
+			<div class="pull-right" id="timer">Timer: 30 seconds</div>
+
+		</div>		
+		<div class="row margin-bottom">
+			<div class="pull-left" id="hiScore">High score: 0<span id="hiScoreName"></span></div>
 		</div>
-		
+	</div>
 			<script type="text/javascript">
 
 			// var playerArray = [];
+			var gameStart = 0;
+			var gameEnd = 0;
+			var timerInterval;
+			var playerArray = [];
+			var playerName = "Player"
+			playerArray.push(new Player(playerName));
+				document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
 
 			function Player(name){
 				this.name = name;
@@ -64,7 +76,7 @@
 
 			function newPlayer(){
 				var playerNameDiv = document.getElementById('player-name');
-				var playerName = playerNameDiv.value;
+				playerName = playerNameDiv.value;
 				playerArray.push(new Player(playerName));
 				console.log(playerArray)
 
@@ -92,7 +104,7 @@
 					clearInterval(timerInterval);
 					gameOn = false;
 					timeDifference = 0;
-					document.getElementById('timer').innerHTML = "Game over";
+					document.getElementById('timer').innerHTML = "Time's up";
 					// var c = document.getElementById("canvas");
 					// var ctx = c.getContext("2d");
 					// ctx.font = "30px Arial";
@@ -103,13 +115,6 @@
 			}
 
 
-
-
-
-			var gameStart = 0;
-			var gameEnd = 0;
-			var timerInterval;
-			var playerArray = [];
 			// add start button - when clicked on the game starts and player can move
 			// when clicked on, get Date.new() and save it to current Date
 			// when clicked on get date.now() + 30 * 3000 milliseconds
@@ -162,7 +167,7 @@
 
 				// make a var for bludger
 				var bludger = new Image();
-				bludger.src = "bludger1.png";
+				bludger.src = "bludger3.png";
 				var bludgerLocation = {
 					x: 250,
 					y: 250,
@@ -254,7 +259,7 @@
 						document.getElementById('score').innerHTML = userScore
 						if(userScore > highScore){
 							highScore = userScore;
-							document.getElementById('hiScore').innerHTML = "High score: " + highScore
+							document.getElementById('hiScore').innerHTML = "High score: " + highScore + " (set by " + playerName + ") "
 						}
 						var currentPlayerIndex = playerArray.length-1;
 						if(userScore > playerArray[currentPlayerIndex].highscore){
@@ -279,10 +284,10 @@
 						){
 							// userScore++;
 							// if you hit the bludger, slow down speed for 3 seconds, then return to normal speed
-							var random3 = Math.random() * 450;
-							var random4 = Math.random() * 400;
-							bludgerLocation.x = random3;
-							bludgerLocation.y = random4;
+							// var random3 = Math.random() * 450;
+							// var random4 = Math.random() * 400;
+							// bludgerLocation.x = random3;
+							// bludgerLocation.y = random4;
 							speedModifier = .1;
 							setTimeout(function(){ speedModifier = .7; }, 3000);
 						}
@@ -379,7 +384,6 @@
 			draw();
 
 			</script>
-	</div>
 
 </body>
 </html>

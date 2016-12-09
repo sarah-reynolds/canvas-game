@@ -1,0 +1,41 @@
+<!-- Scope determines what can see a variable
+-Global
+-Local
+
+A paretn passes all its information down
+a child does not pass it's informatioj up
+a child can see its patents but not vice versa
+by up/down, we mean functions! 
+
+varilable has 3 states
+UNDECLARED
+DECLARED, but UNSET (aka UNDEFINED)
+SET
+
+-->
+
+<script type="text/javascript">
+
+
+function child(a){
+	a = 4;
+	// a += 2; // a is local here
+	// console.log("a's value inside the function:",a)
+	return a;
+}
+
+	var a = 2;
+	// if you dont have a 'var' js will assume its global
+	// do NOT do this. always include 'var'
+	// a = 2;
+	console.log("a's value outside the function:",a);
+	// we call the child, the child changes a to 4
+	childReturnsValue = child(a);
+	console.log(childReturnsValue);
+	// the child changed the variable, its still 4
+	console.log("a's value outside the function:",a);
+
+
+
+
+</script>
