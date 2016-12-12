@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>Quidditch Practice</title>
-	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<style type="text/css" media="screen">
 		.margin-left{
@@ -41,7 +40,8 @@
 			3. Catch the snitch.<img src="snitch3.png"><br/>
 			4. Avoid the bludger. <img src="bludger3.png"> If you are hit by the bludger, your speed will slow down for 3 seconds.</p>
 		</div>
-			<div class="row margin-bottom">
+		
+		<div class="row margin-bottom">
 			<input class="pull-left" id="player-name" type="text" placeholder="Player name">
 			<button class="pull-left" onclick="newPlayer()">Enter name</button>
 			<button class="pull-right" onclick="startGame()">Start game</button>
@@ -50,51 +50,98 @@
 		<div class="row margin-bottom">
 			<div class="pull-left"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
 			<div class="pull-right" id="timer">Timer: 30 seconds</div>
-
 		</div>		
+		
 		<div class="row margin-bottom">
 			<div class="pull-left" id="hiScore">High score: 0<span id="hiScoreName"></span></div>
 		</div>
+	
 	</div>
 			<script type="text/javascript">
 
-			// var playerArray = [];
+		// SET ALL VARIABLES
+			
+			// create the canvas tag with js. the canvas just holds the game
+			var canvas = document.createElement('canvas');
+			// create a context gor JS to play with (methods, properties, etc)
+			var context = canvas.getContext('2d')
 			var gameStart = 0;
 			var gameEnd = 0;
+			var userScore = 0;
+			var highScore = 0;
+			var highScoreName = 0;
 			var timerInterval;
 			var playerArray = [];
 			var playerName = "Player"
+			// Default name set to "Player" in var above. Push below will add the default user name to playerArray, which tracks all users' scores and names per session (resets on browser refresh). Also add's user's name on the screen. See function newPlayer if user enters their name.
 			playerArray.push(new Player(playerName));
 				document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
+			// Game/canvas background
+			var backgroundImage = new Image();
+				backgroundImage.src = "background.png";
+				canvas.width = 512; 
+				canvas.height = 480;
+				// add the canvas tag to the dom
+				document.body.appendChild(canvas);
+			var speedModifier = .7; // Harry's speed
+			var snitchSpeed = 2.33; // Snitch's speed
+			var bludgerSpeed = 2.33;
+			var gameOn = false;
+			// var for Harry
+			var hero = new Image();
+				hero.src = "hp2.png";
+				var heroLocation = {
+					x: 50,
+					y: 50
+				}
+			// var for snitch
+			var snitch = new Image();
+				snitch.src = "snitch3.png";
+				var snitchLocation = {
+					x: 350,
+					y: 350,
+					newX: 350,
+					newY: 350
+				}
+			// var for bludger
+			var bludger = new Image();
+				bludger.src = "bludger3.png";
+				var bludgerLocation = {
+					x: 250,
+					y: 250,
+					newX: 250,
+					newY: 250
+				}
+			// array to hold all the keys that are currently pressed down
+			var keysDown = [];
+
+		// FUNCTIONS
 
 			function Player(name){
 				this.name = name;
 				this.highscore = 0;
 			}
 
-			// Player.prototype.highscre = 0
-
 			function newPlayer(){
 				var playerNameDiv = document.getElementById('player-name');
 				playerName = playerNameDiv.value;
 				playerArray.push(new Player(playerName));
-				console.log(playerArray)
-
 				document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
-				// playerArray.push(playerName);
-				// console.log(playerArray)
+
 			}
 
+			// startGame function is called when user clicks 'Start game'. Function
 			function startGame(){
 				gameOn = true;
-				// user started the game. save the time and time plus 30 seconds
+				// User started the game. Save the time and time plus 30 seconds
 				gameStart = Date.now();
 				gameEnd = Date.now() + 30000;
-				// stert timerInterval
+				// start timerInterval
 				timerInterval = Math.floor(setInterval(updateTimer, 1000));
 				userScore = 0;
 				// here add document to update your score to reflect 0
 				document.getElementById('score').innerHTML = userScore
+
 			}
 
 			function updateTimer() {
@@ -105,84 +152,14 @@
 					gameOn = false;
 					timeDifference = 0;
 					document.getElementById('timer').innerHTML = "Time's up";
-					// var c = document.getElementById("canvas");
-					// var ctx = c.getContext("2d");
-					// ctx.font = "30px Arial";
-					// ctx.fillText("Game Over",10,50);
+					context.font = "30px Arial";
+					context.strokeText("Game Over",10,50);
+					
 				}else{
 				document.getElementById('timer').innerHTML = "Timer: " + Math.floor(timeDifference) + " seconds";
 				}
 			}
 
-
-			// add start button - when clicked on the game starts and player can move
-			// when clicked on, get Date.new() and save it to current Date
-			// when clicked on get date.now() + 30 * 3000 milliseconds
-			// create a setinterval to run every X and inside, recalculate the timer
-			// When the difference is < 0, stop the game, clear the timer, check high score
-			// 1. add pause button
-			// 2. add a countdown timer
-			// 2a. once timer runs out, game is over
-			// 3. keep score, by player
-			// 3a make a player constructor - name (ask), high score
-			// 3b make an unput for player name
-			// 3c
-				// create the canvas tag with js. the canvas just holds the game
-				var canvas = document.createElement('canvas');
-				// create a context gor JS to play with (methods, properties, etc)
-				var context = canvas.getContext('2d')
-
-				canvas.width = 512; //size of the background
-				canvas.height = 480;
-				// add the canvas tag to the dom
-				document.body.appendChild(canvas);
-
-				var backgroundImage = new Image();//anytime you see something with 'new' (it's a constructr) then it's special and either you or js made it
-				backgroundImage.src = "background.png";
-
-				var speedModifier = .7;
-				var monsterSpeed = 2.33;
-				var bludgerSpeed = 2.33;
-
-				// GAME ON OFF
-				var gameOn = false;
-
-				// make a variable var for our hero. he is an image
-				var hero = new Image();
-				hero.src = "hp2.png";
-				var heroLocation = {
-					x: 50,
-					y: 50
-				}
-
-				// make a var for our bad guy
-				var monster = new Image();
-				monster.src = "snitch3.png";
-				var monsterLocation = {
-					x: 350,
-					y: 350,
-					newX: 350,
-					newY: 350
-				}
-
-				// make a var for bludger
-				var bludger = new Image();
-				bludger.src = "bludger3.png";
-				var bludgerLocation = {
-					x: 250,
-					y: 250,
-					newX: 250,
-					newY: 250
-				}
-
-				var userScore = 0;
-				var highScore = 0;
-				var highScoreName = 0;
-				
-
-				
-				// an array to hold all the keys that are currently pressed down
-				var keysDown = [];
 
 				addEventListener('keyup', function(event){
 					delete keysDown[event.keyCode];
@@ -197,29 +174,9 @@
 					// if keyDown[38] is true then the user pushed up
 
 					keysDown[event.keyCode] = true;
-					// console.log(keysDown);
-					// we know a key was pressed or we wouldnt be in here
-					// what key did they press?
-					// console.log(event.key);
-					// if(event.key === 'ArrowDown'){
-					// 	console.log('user pressed down arrow')
-					// 	heroLocation.y += 10
-					// }
-					// if(event.key === 'ArrowUp'){
-					// 	console.log('user pressed up arrow')
-					// 	heroLocation.y -= 10
-					// }
-					// if(event.key === 'ArrowLeft'){
-					// 	console.log('user pressed left arrow')
-					// 	heroLocation.x -= 10
-					// }
-					// if(event.key === 'ArrowRight'){
-					// 	console.log('user pressed right arrow')
-					// 	heroLocation.x += 10
-					// }
 				})
 
-			// this is where we will update the hero based on whats true in keys down
+			// updates Harry's, snitch, and bludger locations
 				function update(){
 					// user pressed right at some point because it's in the array
 					// add if so that it only runs if the location has not reached the end
@@ -248,12 +205,12 @@
 						}
 					}
 
-					// move monster if you touch him
+					// move snitch if you touch him
 					if(
-						(heroLocation.x <= monsterLocation.x + 32)
-						&& (heroLocation.y <= monsterLocation.y + 32)
-						&& (monsterLocation.x <= heroLocation.x + 32)
-						&& (monsterLocation.y <= heroLocation.y + 32)
+						(heroLocation.x <= snitchLocation.x + 32)
+						&& (heroLocation.y <= snitchLocation.y + 32)
+						&& (snitchLocation.x <= heroLocation.x + 32)
+						&& (snitchLocation.y <= heroLocation.y + 32)
 						){
 							userScore++;
 						document.getElementById('score').innerHTML = userScore
@@ -267,13 +224,12 @@
 						}
 
 
-						// randomize the location of the monster upon contact
+						// randomize the location of the snitch upon contact
 							var random = Math.random() * 450;
 							var random2 = Math.random() * 400;
-							monsterLocation.x = random;
-							monsterLocation.y = random2;
+							snitchLocation.x = random;
+							snitchLocation.y = random2;
 						}
-
 
 					// move bludger if you touch him
 					if(
@@ -284,46 +240,35 @@
 						){
 							// userScore++;
 							// if you hit the bludger, slow down speed for 3 seconds, then return to normal speed
-							// var random3 = Math.random() * 450;
-							// var random4 = Math.random() * 400;
-							// bludgerLocation.x = random3;
-							// bludgerLocation.y = random4;
 							speedModifier = .1;
 							setTimeout(function(){ speedModifier = .7; }, 3000);
 						}
-
 				}
-
-
-						// randomize the location of the bludger upon contact
-							
-						
 				
-				
-				// have monster move randomly on the page
-				function monsterMove(){
+				// snitch moves randomnly on the page by creating new random coordinates, then 
+				function snitchMove(){
 					if(gameOn){
 
 						if(
-							(monsterLocation.x <= monsterLocation.newX + 32)
-							&& (monsterLocation.y <= monsterLocation.newY + 32)
-							&& (monsterLocation.newX <= monsterLocation.x + 32)
-							&& (monsterLocation.newY <= monsterLocation.y + 32)
+							(snitchLocation.x <= snitchLocation.newX + 32)
+							&& (snitchLocation.y <= snitchLocation.newY + 32)
+							&& (snitchLocation.newX <= snitchLocation.x + 32)
+							&& (snitchLocation.newY <= snitchLocation.y + 32)
 							){
-							monsterLocation.newX = Math.ceil(Math.random() * 400)
-							monsterLocation.newY = Math.ceil(Math.random() * 400)
+							snitchLocation.newX = Math.ceil(Math.random() * 400)
+							snitchLocation.newY = Math.ceil(Math.random() * 400)
 						}else{
-							if(monsterLocation.newX > monsterLocation.x){
-								monsterLocation.x += (1 * monsterSpeed)
+							if(snitchLocation.newX > snitchLocation.x){
+								snitchLocation.x += (1 * snitchSpeed)
 							}
-							if(monsterLocation.newX < monsterLocation.x){
-								monsterLocation.x -= (1 * monsterSpeed)
+							if(snitchLocation.newX < snitchLocation.x){
+								snitchLocation.x -= (1 * snitchSpeed)
 							}
-							if(monsterLocation.newY > monsterLocation.y){
-								monsterLocation.y += (1 * monsterSpeed)
+							if(snitchLocation.newY > snitchLocation.y){
+								snitchLocation.y += (1 * snitchSpeed)
 							}
-							if(monsterLocation.newY < monsterLocation.y){
-								monsterLocation.y -= (1 * monsterSpeed)
+							if(snitchLocation.newY < snitchLocation.y){
+								snitchLocation.y -= (1 * snitchSpeed)
 							}
 						}
 					}
@@ -363,26 +308,17 @@
 					if(gameOn){
 						update();
 					}
-					monsterMove();
+					snitchMove();
 					bludgerMove();
 					// put out bgimage on the context at x=o and y = 0
 					context.drawImage(backgroundImage,0,0);
 					context.drawImage(hero, heroLocation.x, heroLocation.y);
-					context.drawImage(monster, monsterLocation.x, monsterLocation.y);
+					context.drawImage(snitch, snitchLocation.x, snitchLocation.y);
 					context.drawImage(bludger, bludgerLocation.x, bludgerLocation.y);
 					requestAnimationFrame(draw);
 				}
 
-			// timer steps
-			// 1. Need 2 times: now, and now + 30 seconds
-			// 2. 
-			// var now = Math.floor((Date.now()) / 1000);
-			// console.log(now);
-			// var timerStart = now + 00:00:30;
-			// console.log(timerStart);
-
 			draw();
-
 			</script>
 
 </body>
