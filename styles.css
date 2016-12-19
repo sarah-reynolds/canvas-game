@@ -1,0 +1,40 @@
+body{
+	background-color: #eee;
+}
+
+.margin-bottom{
+	margin-bottom:  10px;
+}
+
+.max-width{
+	width: 512px;
+}
+
+.text-left{
+	line-height: 25px;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+#timer{
+	transition: all 1s;
+	
+}
+.timerTransition{
+	transform: scale(3);
+}
+
+#hiScore{
+	transition: all 2s;
+}
+
+.hiScoreTransition{
+	transform: scale(1);
+	background-color: yellow;
+}
+
+input{
+	height: 30px;
+	border-radius: 5px;
+	margin-right: 5px;
+}

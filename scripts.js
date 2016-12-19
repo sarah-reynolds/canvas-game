@@ -1,3 +1,4 @@
+
 		// SET ALL VARIABLES
 			
 			// create the canvas tag with js. the canvas holds the game
@@ -63,6 +64,9 @@
 				var playerNameDiv = document.getElementById('player-name');
 				playerName = playerNameDiv.value;
 				playerArray.push(new Player(playerName));
+				if(playerName.length < 1){
+					playerName = "Player";
+				}
 				document.getElementById('nameBoard').innerHTML = playerName + "'s score: "
 			}
 
@@ -87,8 +91,13 @@
 					gameOn = false;
 					timeDifference = 0;
 					document.getElementById('timer').innerHTML = "Time's up";
-					context.font = "30px Arial";
-					context.strokeText("Game Over",10,50);
+					$('#timer').addClass('timerTransition');
+					setTimeout(function(){
+						$('#timer').removeClass('timerTransition');
+					}, 1000);
+
+					// context.font = "30px Arial";
+					// context.strokeText("Game Over",10,50);
 					
 				}else{
 				document.getElementById('timer').innerHTML = "Timer: " + Math.floor(timeDifference) + " seconds";
@@ -147,13 +156,17 @@
 						if(userScore > highScore){
 							highScore = userScore;
 							document.getElementById('hiScore').innerHTML = "High score: " + highScore + " (set by " + playerName + ") "
+							$('#hiScore').addClass('hiScoreTransition');
+							setTimeout(function(){
+								$('#hiScore').removeClass('hiScoreTransition');
+							}, 2000);
 						}
 						var currentPlayerIndex = playerArray.length-1;
 						if(userScore > playerArray[currentPlayerIndex].highscore){
 							playerArray[currentPlayerIndex].highscore = userScore
 						}
 
-						// randomize the location of the snitch upon contact
+						// randomize the location of the snitch upon collision
 							var random = Math.random() * 450;
 							var random2 = Math.random() * 400;
 							snitchLocation.x = random;
