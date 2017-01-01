@@ -1,5 +1,6 @@
 body{
 	background-color: #eee;
+	font-size: 16px;
 }
 
 .margin-bottom{
@@ -12,7 +13,7 @@ body{
 
 .text-left{
 	line-height: 25px;
-	font-size: 18px;
+	font-size: 23px;
 	margin-bottom: 10px;
 }
 
@@ -34,7 +35,7 @@ body{
 }
 
 input{
-	height: 30px;
+	height: 35px;
 	border-radius: 5px;
 	margin-right: 5px;
 }

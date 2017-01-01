@@ -2,7 +2,7 @@
 		// SET ALL VARIABLES
 			
 			// create the canvas tag with js. the canvas holds the game
-			var canvas = document.createElement('canvas');
+			// var canvas = document.createElement('canvas');
 			// create a context for JS to work with (methods, properties, etc)
 			var context = canvas.getContext('2d')
 			var gameStart = 0;
@@ -22,7 +22,7 @@
 				canvas.width = 512; 
 				canvas.height = 480;
 				// add the canvas tag to the dom
-				document.body.appendChild(canvas);
+				// document.body.appendChild(canvas);
 			var speedModifier = .7; // Harry's speed
 			var snitchSpeed = 2.33; // Snitch's speed
 			var bludgerSpeed = 2.33;

@@ -6,37 +6,43 @@
 	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body class="text-center">
-	<div class="container max-width">
-		
-		<div>
-			<h2>Quidditch Practice</h2>
+	<div class="container">	
+		<div class="row">
+			<div class="text-center">
+					<h2>Quidditch Practice</h2>
+			</div>
+			<div class="col-xs-12 col-md-6">	
+				
+				
+				<div class="row lead text-left">
+					1. Enter your name.<br/>
+					2. Click 'Start game'.<br/>
+					3. Catch the snitch.<img src="snitch_animated.gif"><br/>
+					4. Avoid the bludger. <img src="bludger3.png"> If you are hit by the bludger, your speed will slow down for 3 seconds.
+				</div>
+				
+				<div class="row margin-bottom">
+					<input class="pull-left" id="player-name" type="text" placeholder="Player name">
+					<button class="pull-left btn btn-default" onclick="newPlayer()">Enter name</button>
+					<button class="pull-right btn btn-default" onclick="startGame()">Start game</button>
+				</div>
+				
+				<div class="row margin-bottom">
+					<div class="pull-left"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
+					<div class="pull-right" id="timer">Timer: 30 seconds</div>
+				</div>		
+				
+				<div class="row margin-bottom">
+					<div class="pull-left" id="hiScore">High score: 0<span id="hiScoreName"></span></div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6">
+				<canvas id="canvas"></canvas>
+			</div>
 		</div>
-		
-		<div class="row lead text-left">
-			1. Enter your name.<br/>
-			2. Click 'Start game'.<br/>
-			3. Catch the snitch.<img src="snitch_animated.gif"><br/>
-			4. Avoid the bludger. <img src="bludger3.png"> If you are hit by the bludger, your speed will slow down for 3 seconds.
-		</div>
-		
-		<div class="row margin-bottom">
-			<input class="pull-left" id="player-name" type="text" placeholder="Player name">
-			<button class="pull-left btn btn-default btn-sm" onclick="newPlayer()">Enter name</button>
-			<button class="pull-right btn btn-default btn-sm" onclick="startGame()">Start game</button>
-		</div>
-		
-		<div class="row margin-bottom">
-			<div class="pull-left"><span id="nameBoard">Your score: </span><span id="score">0</span></div>
-			<div class="pull-right" id="timer">Timer: 30 seconds</div>
-		</div>		
-		
-		<div class="row margin-bottom">
-			<div class="pull-left" id="hiScore">High score: 0<span id="hiScoreName"></span></div>
-		</div>
-	
-	</div>
-			<script type="text/javascript" src="scripts.js"></script>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+	</div>
+<script type="text/javascript" src="scripts.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </body>
 </html>
