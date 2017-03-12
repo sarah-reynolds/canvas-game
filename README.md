@@ -1,7 +1,7 @@
 # Quidditch Practice
 ## Canvas game
 
-Quidditch Practice is a simple canvas game. The user plays as Harry Potter on a broom, and needs to catch as many of the golden snitches as possible in 30 seconds. 
+A Harry Potter themed game built using canvas. The user plays as Harry Potter on a broom, and uses the arrow keys on the keyboard to catch as many golden snitches possible in 30 seconds. Being hit by a the bludger will slow you down for 3 seconds. High scores are stored in each browser session.
 
 ### Technologies 
 - HTML 
